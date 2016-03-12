@@ -6,10 +6,9 @@ pollutantmean <- function (directory="specdata", pollutant="nitrate", id=1:332) 
   
     dir_list <- list.files(directory, full.names=TRUE) # save dir to variable
     dir_list <-dir_list[id] # filter out unwanted ones
-  
-    new_matrix <- data.frame()
+
     for (number in 1:length(dir_list)) {
-        print (dir_list[number])
+        #print (dir_list[number])
         new_matrix <- rbind ( new_matrix, read.csv (dir_list[number]))
     }
     #print(new_matrix)
@@ -27,6 +26,7 @@ complete <- function (directory, id=1:332) {
         temp <- data.frame(number, good_rows)
         result_matrix <- rbind (result_matrix, temp)
     }
+    colnames(result_matrix) <- c("id", "nobs")
     # print (result_matrix)
     result_matrix
 }
@@ -38,9 +38,7 @@ corr <- function (directory, threshold=0) {
     for (number in 1:length(dir_list)) {
         
         temp_file <- read.csv(dir_list[number])
-        # print ("apple")
         # print (temp_file)
-        # print ("2apple")
         good_rows <-( NROW( temp_file<-temp_file[complete.cases(temp_file),]))
        
         if (good_rows > threshold) {
@@ -48,20 +46,9 @@ corr <- function (directory, threshold=0) {
             #print(good_rows)
             tempV <- cor(temp_file$sulfate, temp_file$nitrate)
             # print (tempV)
-            # temp <- class(tempV)
-            # print (temp)
             results_vector <- append(results_vector, tempV )
-
-            
-            
         }
-        
-        # temp <- data.frame(number, good_rows)
-        # result_matrix <- rbind (result_matrix, temp)
     }
-    
     results_vector
-    # print (result_matrix)
-    # length(dir_list)
 }
 
