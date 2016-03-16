@@ -104,23 +104,27 @@ rankall <- function(outcome, num = "best") {
     outcome <- sub ("[ ]", ".", outcome) 
     #get column name to look at
     outcome <- paste ("Hospital.30.Day.Death..Mortality..Rates.from.", outcome, sep = "")
-    resultsDF <- data.frame(hospital=character(), state=character())
+    resultsDF <- data.frame(stringsAsFactors = FALSE)
     states <- unique(df$State)
+    print(class(states))
     for (state in states) {
+        df.state <- data.frame( stringsAsFactors = FALSE)
         df.state <- subset(df, df$State == state)
         df.state <- df.state[ order( as.numeric(df.state[[outcome]]), df.state[["Hospital.Name"]], decreasing=FALSE), ]
-        temp.vector <- data.frame()
+        temp.vector <- data.frame( stringsAsFactors = FALSE)
         if (num == "best") {
             num <- 1
         } else if (num == "worst") {
             num <- nrow(df.state)
         }
         temp.vector <- c(df.state[num, "Hospital.Name"], state)
-        as.vector(temp.vector)
-        print(dim(temp.vector))
-        print (temp.vector)
-        resultsDF <- rbind(resultsDF, temp.vector )
+        # as.vector(temp.vector)
+        # print(dim(temp.vector))
+        # print (temp.vector)
+        resultsDF <- rbind(resultsDF, temp.vector )  
+        # resultsDF[,c(df.state[num, "Hospital.Name"], state)] <- sapply(resultsDF[,c(df.state[num, "Hospital.Name"], state)],as.character) 
         # print (resultsDF)
+        #http://stackoverflow.com/questions/24447877/invalid-factor-level-na-generated-when-pasting-in-a-dataframe-in-r
     }
     colnames(resultsDF) <- c("Hospital", "state")
     resultsDF
