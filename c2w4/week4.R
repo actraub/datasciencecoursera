@@ -118,15 +118,20 @@ rankall <- function(outcome, num = "best") {
             num <- nrow(df.state)
         }
         temp.vector <- c(df.state[num, "Hospital.Name"], state)
+   
+        
         # as.vector(temp.vector)
         # print(dim(temp.vector))
         # print (temp.vector)
-        resultsDF <- rbind(resultsDF, temp.vector )  
+        resultsDF <- rbind(resultsDF, temp.vector ) 
+        resultsDF[] <- lapply(resultsDF, as.character)
+        
         # resultsDF[,c(df.state[num, "Hospital.Name"], state)] <- sapply(resultsDF[,c(df.state[num, "Hospital.Name"], state)],as.character) 
         # print (resultsDF)
         #http://stackoverflow.com/questions/24447877/invalid-factor-level-na-generated-when-pasting-in-a-dataframe-in-r
     }
     colnames(resultsDF) <- c("Hospital", "state")
+    
     resultsDF
 }
 
