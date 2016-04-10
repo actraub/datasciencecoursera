@@ -96,35 +96,49 @@ c3w3q3 <- function(){
     aturl2 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv"
     atfile1 <- "./data/FGDP.csv"
     atfile2 <- "./data/FEDSTATS_Country.csv"
-    
+   
     
     if (!file.exists("./data") ) {
         dir.create("./data")
     }
     
-    if (!file.exists(aturl1) ) {
+    if (!file.exists(atfile1) ) {
         download.file(aturl1, atfile1, method="curl")
     }
-    if (!file.exists(aturl2) ) {
+    if (!file.exists(atfile2) ) {
         download.file(aturl2, atfile2, method="curl")
     }
     
     DT1  <- read.csv(atfile1)
     DT2  <- read.csv(atfile2)
-    
-    mergedData <- merge(DT1, DT2, by.x="X", by.y="CountryCode")
-    class(mergedData)
+  
+    DT1 <- DT1[6:195,]
+    # print(DT1)
+    mergedData <- merge(DT1, DT2, by.x="X", by.y="CountryCode", all=FALSE)
+    # print(mergedData$Gross.domestic.product.2012 )
 
-    class(mergedData)
-    #library(dplyr)
-    # mergedData %>% arrange(!is.na(Gross.domestic.product.2012), Gross.domestic.product.2012)
-    # library(plyr)
-    # mergedData <- arrange(mergedData,desc(mergedData$Gross.domestic.product.2012))
-    # mergedData
-    # 
-    mergedData <- mergedData[, order(mergedData$Gross.domestic.product.2012)]
+    mergedData$newC <- as.numeric(mergedData$Gross.domestic.product.2012)
+    library(plyr)
+    mergedData <- head(arrange(mergedData,as.numeric(desc(newC))), 13)
+    mergedData[,1:5]
     
-    # sort(mergedData,  mergedData$Gross.domestic.product.2012)
-   print( mergedData )
+    #"High income: OECD" and "High income: nonOECD" 
+    mean()
+    
+    
+    
+    
+    
+    #mergedData2 <- mergedData[order(mergedData[, 2])]
+
 }
+
+
+
+#q4
+
+# Browse[2]> mean(mergedData$newC [mergedData$Income.Group == "High income: nonOECD"])
+# [1] 93.73913
+# Browse[2]> mean(mergedData$newC [mergedData$Income.Group == "High income: OECD"])
+# [1] 113.7586
 
